@@ -34,7 +34,7 @@ const mongoURL = `mongodb+srv://${process.env.MONGO_DB_USER_NAME}:${process.env.
 
 //Middleware
 app.use(express.json());
-app.use(authMiddleware);
+// app.use(authMiddleware);
 
 //.................................
 
@@ -60,7 +60,7 @@ app.post("/update", adminMiddleware, (req, res) => {
 //   res.json({ products: productMock.products });
 // });
 
-app.use("/product", productRoute);
+app.use("/products", productRoute);
 //................................
 
 //Error handling
