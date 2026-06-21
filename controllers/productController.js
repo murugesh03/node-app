@@ -1,12 +1,15 @@
 const productMock = require("../mock/data.json");
 const productModel = require("../models/products");
 
+//Loggers
+
 exports.getAllProducts = async (req, res) => {
   // res.json({ products: productMock.products });
   try {
     const products = await productModel.find();
     res.json({ products });
   } catch (error) {
+    console.log(error, "Error fetching products");
     res.status(500).json({ error: "Failed to fetch products" });
   }
 };
@@ -32,10 +35,12 @@ exports.getProductId = async (req, res) => {
     const product = await productModel.findOne({ id });
     console.log(product);
     if (!product) {
+      console.log("Product not found");
       return res.status(404).json({ error: "Product not found" });
     }
     res.json({ product });
   } catch (error) {
+    console.log(error, "Error fetching product");
     res.status(500).json({ error: "Failed to fetch product" });
   }
 };
@@ -51,14 +56,14 @@ exports.updateProduct = async (req, res) => {
     const updates = req.body;
     const product = await productModel.findOneAndUpdate({ id }, updates, {
       returnDocument: "after",
-      runValidators: true
+      runValidators: true //optional
     });
     if (!product) {
       return res.status(404).json({ error: "Product not found" });
     }
     res.json({ message: "Product updated successfully", product });
   } catch (error) {
-    console.log(error, "this is the error");
+    console.log(error, "Error updating product");
     res.status(500).json({ error: "Failed to update product" });
   }
 };
@@ -74,7 +79,7 @@ exports.deleteProduct = async (req, res) => {
       products: updatedProducts
     });
   } catch (error) {
-    console.log(error, "this is the error");
+    console.log(error, "Error deleting product");
     res.status(500).json({ error: "Failed to delete product" });
   }
 };
@@ -86,6 +91,7 @@ exports.addProduct = async (req, res) => {
     console.log(addResponse);
     res.json({ message: "Product added successfully", product: addResponse });
   } catch (error) {
+    console.log(error, "Error adding product");
     res.status(500).json({ error: "Failed to add product" });
   }
 };

@@ -18,9 +18,9 @@ const productSchema = new mongoose.Schema({
     required: true
   },
   category: {
-    type: String,
-    required: true
-  }
+    type: String
+  },
+  phoneNumber: Number
 });
 
 module.exports = mongoose.model("Product", productSchema);

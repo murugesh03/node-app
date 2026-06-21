@@ -29,12 +29,13 @@ const adminMiddleware = require("./middleware/admin");
 // const User = require("./utils");
 const productMock = require("./mock/data.json");
 const productRoute = require("./routes/product");
-
+const uploadRoute = require("./routes/upload");
 const mongoURL = `mongodb+srv://${process.env.MONGO_DB_USER_NAME}:${process.env.MONGO_DB_PASSWORD}@cluster0.8c3vhn6.mongodb.net/${process.env.MONGO_DB_NAME}?appName=Cluster0`;
 
 //Middleware
 app.use(express.json());
 // app.use(authMiddleware);
+app.use("/upload", uploadRoute);
 
 //.................................
 
@@ -81,4 +82,18 @@ mongoose
     console.error("Error connecting to MongoDB:", error);
   });
 
+// function connectToDb() {
+//   try {
+//     mongoose.connect(mongoURL).then(() => {
+//       console.log("Connected to MongoDB");
+//       app.listen(3000, () => {
+//         console.log("server running at 3000");
+//         //   process.exit(0);
+//       });
+//     });
+//   } catch (error) {
+//     console.error("Error connecting to MongoDB:", error);
+//   }
+// }
+// connectToDb();
 //Server
