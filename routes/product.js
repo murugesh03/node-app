@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const constroller = require("../controllers/productController");
+const upload = require("../middleware/multer");
 
 router.get("/", constroller.getAllProducts);
 
 router.get("/:id", constroller.getProductId);
 
-router.post("/", constroller.addProduct);
+router.post("/", upload.single("image"), constroller.addProduct);
 
 router.patch("/:id", constroller.updateProduct);
 

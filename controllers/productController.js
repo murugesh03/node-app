@@ -1,5 +1,6 @@
 const productMock = require("../mock/data.json");
 const productModel = require("../models/products");
+const { uploadFile, getSignedFileUrl } = require("../services/s3Service");
 
 //Loggers
 
@@ -86,7 +87,15 @@ exports.deleteProduct = async (req, res) => {
 
 exports.addProduct = async (req, res) => {
   try {
-    const product = new productModel(req.body);
+    const productData = { ...req.body };
+
+    if (req.file) {
+      const key = `${Date.now()}-${req.file.originalname}`;
+      await uploadFile(req.file, key);
+      productData.imageUrl = await getSignedFileUrl(key);
+    }
+
+    const product = new productModel(productData);
     const addResponse = await product.save();
     console.log(addResponse);
     res.json({ message: "Product added successfully", product: addResponse });
