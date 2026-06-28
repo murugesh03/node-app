@@ -1,0 +1,68 @@
+doctype html
+html
+  head
+    title User Management
+    style.
+      body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; }
+      .container { display: flex; gap: 20px; }
+      .section { flex: 1; }
+      form { display: flex; flex-direction: column; gap: 10px; }
+      input, button, select { padding: 10px; }
+      button { cursor: pointer; background: #2196F3; color: white; border: none; border-radius: 4px; }
+      button:hover { background: #0b7dda; }
+      .delete-btn { background: #dc3545; }
+      .delete-btn:hover { background: #c82333; }
+      .message { padding: 10px; margin-bottom: 10px; border-radius: 6px; }
+      .success { background: #e8f5e9; color: #2e7d32; }
+      .error { background: #ffebee; color: #c62828; }
+      table { width: 100%; border-collapse: collapse; }
+      table th, table td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+      table th { background: #f5f5f5; }
+      .nav { margin-bottom: 20px; }
+      .nav a { margin-right: 15px; text-decoration: none; color: #2196F3; }
+      .nav a:hover { text-decoration: underline; }
+  body
+    .nav
+      a(href='/dashboard') Dashboard
+      a(href='/products/new') Create Product
+      a(href='/products') View Products
+      a(href='/logout') Logout
+    
+    h1 User Management
+    
+    if message
+      div(class=`message ${success ? 'success' : 'error'}`)= message
+    
+    .container
+      .section
+        h2 Add New User
+        form(method='POST' action='/users/add')
+          input(type='text' name='name' placeholder='Full Name' required)
+          input(type='email' name='email' placeholder='Email' required)
+          input(type='password' name='password' placeholder='Password' required)
+          select(name='role' required)
+            option(value='user') User
+            option(value='admin') Admin
+          button(type='submit') Add User
+      
+      .section
+        h2 All Users
+        if users && users.length > 0
+          table
+            thead
+              tr
+                th Name
+                th Email
+                th Role
+                th Action
+            tbody
+              each user in users
+                tr
+                  td= user.name
+                  td= user.email
+                  td= user.role
+                  td
+                    form(method='POST' action=`/users/delete/${user._id}` style='display:inline;')
+                      button(type='submit' class='delete-btn' onclick='return confirm("Delete this user?")') Delete
+        else
+          p No users found.

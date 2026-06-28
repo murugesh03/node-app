@@ -15,6 +15,16 @@ exports.getAllProducts = async (req, res) => {
   }
 };
 
+exports.renderProductsList = async (req, res) => {
+  try {
+    const products = await productModel.find();
+    return res.render("products-list", { products });
+  } catch (error) {
+    console.log(error, "Error fetching products");
+    return res.render("products-list", { products: [] });
+  }
+};
+
 // userInfo={
 //   name:'sam',
 //   last:'raj',
@@ -98,9 +108,28 @@ exports.addProduct = async (req, res) => {
     const product = new productModel(productData);
     const addResponse = await product.save();
     console.log(addResponse);
-    res.json({ message: "Product added successfully", product: addResponse });
+
+    if (req.headers.accept && req.headers.accept.includes("text/html")) {
+      return res.render("product-form", {
+        message: "Product added successfully",
+        success: true
+      });
+    }
+
+    return res
+      .status(201)
+      .json({ message: "Product added successfully", product: addResponse });
   } catch (error) {
     console.log(error, "Error adding product");
-    res.status(500).json({ error: "Failed to add product" });
+
+    if (req.headers.accept && req.headers.accept.includes("text/html")) {
+      return res.status(500).render("product-form", {
+        message: "Failed to add product",
+        success: false,
+        error: true
+      });
+    }
+
+    return res.status(500).json({ error: "Failed to add product" });
   }
 };
